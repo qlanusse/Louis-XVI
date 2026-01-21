@@ -185,7 +185,7 @@ pcbs:
         what: ceoloide/battery_connector_jst_ph_2
         params:
           reversible: true
-          BAT_P: RAW
+          BAT_P: BAT_P
           BAT_N: GND
         where:
           ref: main_inner_bot
@@ -193,18 +193,16 @@ pcbs:
           rotate: -90
       power_switch:
         what: ceoloide/power_switch_smd_side
-        params:
-          reversible: false
         where:
-          ref: main_inner_bot
-          shift: [2kx+3, -1]
-          rotate: -70
+          ref: thumb_5_high
+          shift: [-10, 9]
+          rotate: 88
       reset:
         what: ceoloide/reset_switch_tht_top
         params:
           reversible: true
           from: GND
-          to: RS
+          to: RST
         where:
           ref: main_inner_bot
           shift: [1.5kx, -3]
