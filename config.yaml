@@ -1,0 +1,211 @@
+units:
+  # Proxy Spacing
+  kx: cx
+  ky: cy
+  # Padding
+  m: 4
+  px: kx + m
+  py: ky + m
+  # Preview
+  $default_width: cx
+  $default_height: cy
+points:
+  zones:
+    main:
+      #KiCAD placement
+      anchor:
+        shift: [100,-100]
+      key:
+        padding: 1ky
+        spread: 1kx+2
+      columns:
+        outer:
+          key.column_net: P4
+        pinky:
+          key.column_net: P5
+        ring:
+          key:
+            stagger: 10
+            splay: -4
+            column_net: P6
+        middle:
+          key:
+            column_net: P7
+            stagger: 5
+        index:
+          key:
+            column_net: P8
+            stagger: -5
+        inner:
+          key:
+            column_net: P9
+            splay: -4
+            stagger: -5
+      rows:
+        bot:
+          row_net: P19
+        mid:
+          row_net: P20
+        top:
+          row_net: P21
+    thumb:
+      key:
+        padding: 1ky
+        spread: kx + 2
+        splay: -10
+      anchor:
+        ref: main_ring_bot
+        shift: [0.5kx, -1.5ky]
+      columns:
+        1:
+          rows:
+            high:
+              skip: true
+          key:
+            column_net: P5
+            splay: 0
+        2:
+          key.column_net: P6
+          rows:
+            high:
+              skip: true
+        3:
+          key.column_net: P7
+          rows:
+            high:
+              skip: true
+        4:
+          key.column_net: P8
+        5:
+          key.column_net: P9
+      rows:
+        low:
+          row_net: P18
+        high:
+          row_net: P15 
+  rotate: -10
+outlines:
+  raw:
+    - what: rectangle
+      where: true
+      size: [px, py]
+  keys:
+    - what: rectangle
+      where: true
+      size: [kx-0.5,ky-0.5]
+  board:
+    - what: polygon
+      operation: stack
+      points:
+        - ref: main_outer_top
+          shift: [-0.5px,0.5py]
+        - ref: main_pinky_top
+          shift: [0.5px,0.5py]
+        - ref: main_ring_top
+          shift: [-0.5px,0.5py]
+        - ref: main_ring_top
+          shift: [0.5cx,0.5py]
+        - ref: main_middle_top
+          shift: [-0.5px,0.5py]
+        - ref: main_middle_top
+          shift: [0.5px,0.5py]
+        - ref: main_index_top
+          shift: [-0.5cx,0.5py]
+        - ref: main_index_top
+          shift: [0.5px,0.5py]
+        - ref: main_inner_top
+          shift: [-0.5px,0.5py]
+        - ref: main_inner_top
+          shift: [1.5px-0.5m,0.5py]
+        - ref: main_inner_bot
+          shift: [1.5px-0.5m,-0.5py+m]
+        - ref: thumb_5_high
+          shift: [0.5px,0.5py]
+        - ref: thumb_5_low
+          shift: [0.5px,-0.5py]
+        - ref: thumb_2_low
+          shift: [0.5px, -0.5py]
+        - ref: thumb_2_low
+          shift: [0.5px, -0.5py]
+        - ref: thumb_1_low
+          shift: [-0.5px,-0.5py]
+        - ref: main_pinky_bot
+          shift: [0.5px, -0.5py]
+        - ref: main_outer_bot
+          shift: [-0.5px,-0.5py]
+      fillet: 2
+  combo:
+    - name: board
+    - operation: subtract
+      name: keys
+pcbs:
+  tutorial:
+    template: kicad8
+    outlines:
+      main:
+        outline: board
+    footprints:
+      choc:
+        what: ceoloide/switch_choc_v1_v2
+        where: true
+        params:
+          reversible: true
+          hotswap: true
+          from: "{{column_net}}"
+          to: "{{colrow}}"
+      diode:
+        what: ceoloide/diode_tht_sod123
+        where: true
+        params:
+          reversible: true
+          include_thru_hole_smd_pads: true
+          include_traces_vias: true
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        adjust:
+          shift: [0, -5]
+      controller:
+        what: ceoloide/mcu_nice_nano
+        params:
+          reversible: true
+        where:
+          ref: main_inner_top
+          shift: [20, -8]
+      screen:
+        what: ceoloide/display_nice_view
+        params:
+          reversible: true
+          CS:   P1
+          MOSI: P2
+          SCK:  P3
+        where:
+          ref: main_inner_mid
+          shift: [1kx+2, 5]
+      battery:
+        what: ceoloide/battery_connector_jst_ph_2
+        params:
+          reversible: true
+          BAT_P: RAW
+          BAT_N: GND
+        where:
+          ref: main_inner_bot
+          shift: [1kx+3, -1]
+          rotate: -90
+      power_switch:
+        what: ceoloide/power_switch_smd_side
+        params:
+          reversible: false
+        where:
+          ref: main_inner_bot
+          shift: [2kx+3, -1]
+          rotate: -70
+      reset:
+        what: ceoloide/reset_switch_tht_top
+        params:
+          reversible: true
+          from: GND
+          to: RS
+        where:
+          ref: main_inner_bot
+          shift: [1.5kx, -3]
+          rotate: -90
