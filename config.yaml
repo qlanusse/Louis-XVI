@@ -20,25 +20,25 @@ points:
         spread: 1kx+2
       columns:
         outer:
-          key.column_net: P4
+          key.column_net: P9
         pinky:
-          key.column_net: P5
+          key.column_net: P8
         ring:
           key:
             stagger: 10
             splay: -4
-            column_net: P6
+            column_net: P7
         middle:
           key:
-            column_net: P7
+            column_net: P6
             stagger: 5
         index:
           key:
-            column_net: P8
+            column_net: P5
             stagger: -5
         inner:
           key:
-            column_net: P9
+            column_net: P4
             splay: -4
             stagger: -5
       rows:
@@ -62,28 +62,28 @@ points:
             high:
               skip: true
           key:
-            column_net: P5
+            column_net: P6
             splay: 0
         2:
-          key.column_net: P6
+          key.column_net: P5
           rows:
             high:
               skip: true
         3:
-          key.column_net: P7
+          key.column_net: P4
           rows:
             high:
               skip: true
         4:
-          key.column_net: P8
+          key.column_net: P16
         5:
-          key.column_net: P9
+          key.column_net: P10
       rows:
         low:
-          row_net: P18
+          row_net: P15
         high:
-          row_net: P15 
-  rotate: -10
+          row_net: P18
+  rotate: 8
 outlines:
   raw:
     - what: rectangle
@@ -193,6 +193,8 @@ pcbs:
           rotate: -90
       power_switch:
         what: ceoloide/power_switch_smd_side
+        params:
+          reversible: true
         where:
           ref: thumb_5_high
           shift: [-10, 9]
