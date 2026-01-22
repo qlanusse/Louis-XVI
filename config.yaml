@@ -6,9 +6,17 @@ units:
   m: 4
   px: kx + m
   py: ky + m
+  # Double paddding
+  dpx: kx + 2m
+  dpy: ky + 2m
   # Preview
   $default_width: cx
   $default_height: cy
+  # M2 screws
+  screwSize: 1
+  # Other
+  baseWidth: 4
+  extrudeSize: baseWidth+4
 points:
   zones:
     main:
@@ -104,13 +112,13 @@ outlines:
         - ref: main_ring_top
           shift: [-0.5px,0.5py]
         - ref: main_ring_top
-          shift: [0.5cx,0.5py]
+          shift: [0.5kx,0.5py]
         - ref: main_middle_top
           shift: [-0.5px,0.5py]
         - ref: main_middle_top
           shift: [0.5px,0.5py]
         - ref: main_index_top
-          shift: [-0.5cx,0.5py]
+          shift: [-0.5kx,0.5py]
         - ref: main_index_top
           shift: [0.5px,0.5py]
         - ref: main_inner_top
@@ -125,8 +133,6 @@ outlines:
           shift: [0.5px,-0.5py]
         - ref: thumb_2_low
           shift: [0.5px, -0.5py]
-        - ref: thumb_2_low
-          shift: [0.5px, -0.5py]
         - ref: thumb_1_low
           shift: [-0.5px,-0.5py]
         - ref: main_pinky_bot
@@ -134,12 +140,77 @@ outlines:
         - ref: main_outer_bot
           shift: [-0.5px,-0.5py]
       fillet: 2
+  xlBoard:
+    - what: polygon
+      operation: stack
+      points:
+        - ref: main_outer_top
+          shift: [-0.5dpx,0.5dpy]
+        - ref: main_pinky_top
+          shift: [0.5kx,0.5dpy]
+        - ref: main_ring_top
+          shift: [-0.5dpx,0.5dpy]
+        - ref: main_ring_top
+          shift: [0.5kx-0.5m,0.5dpy]
+        - ref: main_middle_top
+          shift: [-0.5dpx,0.5dpy]
+        - ref: main_middle_top
+          shift: [0.5dpx,0.5dpy]
+        - ref: main_index_top
+          shift: [-0.5kx+0.5m,0.5dpy]
+        - ref: main_index_top
+          shift: [0.5dpx,0.5dpy]
+        - ref: main_inner_top
+          shift: [-0.5dpx+m,0.5dpy]
+        - ref: main_inner_top
+          shift: [1.5dpx-1.5m,0.5dpy]
+        - ref: main_inner_bot
+          shift: [1.5px,-0.5py+1.5m]
+        - ref: thumb_5_high
+          shift: [0.5dpx,0.5dpy]
+        - ref: thumb_5_low
+          shift: [0.5dpx,-0.5dpy]
+        - ref: thumb_2_low
+          shift: [0.5dpx-0.5m, -0.5dpy]
+        - ref: thumb_1_low
+          shift: [-0.5dpx,-0.5dpy]
+        - ref: main_pinky_bot
+          shift: [0.5dpx-m, -0.5dpy]
+        - ref: main_outer_bot
+          shift: [-0.5dpx,-0.5dpy]
+      fillet: 2
   combo:
     - name: board
     - operation: subtract
       name: keys
+  mountingHoles:
+    - what: circle
+      radius: screwSize
+      where:
+        ref: [main_outer_top]
+        shift: [0.55kx, -0.3ky]
+    - what: circle
+      radius: screwSize
+      where:
+        ref: [main_inner_top]
+        shift: [-0.55kx, -0.3ky]
+    - what: circle
+      radius: screwSize
+      where:
+        ref: [main_outer_bot]
+        shift: [0.55kx, -0.3ky]
+    - what: circle
+      radius: screwSize
+      where:
+        ref: [thumb_2_low]
+        shift: [0.55kx, -0.3ky]
+    - what: circle
+      radius: screwSize
+      where:
+        ref: [thumb_5_high]
+        shift: [-0.6kx, -0.3ky]
 pcbs:
-  tutorial:
+  louisXVI:
     template: kicad8
     outlines:
       main:
@@ -209,3 +280,61 @@ pcbs:
           ref: main_inner_bot
           shift: [1.5kx, -3]
           rotate: -90
+      holeTopLeft:
+        what: ceoloide/mounting_hole_npth
+        where:
+          ref: [main_outer_top]
+          shift: [0.55kx, -0.3ky]
+      holeTopRight:
+        what: ceoloide/mounting_hole_npth
+        where:
+          ref: [main_inner_top]
+          shift: [-0.55kx, -0.3ky]
+      holeBotLeft:
+        what: ceoloide/mounting_hole_npth
+        where:
+          ref: [main_outer_bot]
+          shift: [0.55kx, -0.3ky]
+      holeBotMid:
+        what: ceoloide/mounting_hole_npth
+        where:
+          ref: [thumb_2_low]
+          shift: [0.55kx, -0.3ky]
+      holeBotRight:
+        what: ceoloide/mounting_hole_npth
+        where:
+          ref: [thumb_5_high]
+          shift: [-0.6kx, -0.3ky]
+cases:
+  bottom:
+    - name: board
+      extrude: baseWidth
+  xlBottom:
+    - name: xlBoard
+      extrude: baseWidth
+  _outerWall:
+    - name: xlBoard
+      extrude: extrudeSize
+  _innerWall:
+    - name: board
+      extrude: extrudeSize
+  wall:
+    - what: case
+      name: _outerWall
+      operation: add
+    - what: case
+      name: _innerWall
+      operation: subtract
+  _holes:
+    - name: mountingHoles
+      extrude: baseWidth
+  case:
+    - what: case
+      name: xlBottom
+      operation: add
+    - what: case
+      name: _holes
+      operation: subtract
+    - what: case
+      name: wall
+      operation: add
