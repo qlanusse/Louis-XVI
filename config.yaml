@@ -14,9 +14,12 @@ units:
   $default_height: cy
   # M2 screws
   screwSize: 1
+  moutingHoleSize: 4.1
   # Other
-  baseWidth: 4
-  extrudeSize: baseWidth+4
+  baseThickness: 4
+  extrudeSize: baseThickness+4
+  choc_plate_thickness: 1.2
+  fillet: 2
 points:
   zones:
     main:
@@ -28,25 +31,25 @@ points:
         spread: 1kx+2
       columns:
         outer:
-          key.column_net: P9
+          key.column_net: P4
         pinky:
-          key.column_net: P8
+          key.column_net: P5
         ring:
           key:
             stagger: 10
             splay: -4
-            column_net: P7
+            column_net: P6
         middle:
           key:
-            column_net: P6
+            column_net: P7
             stagger: 5
         index:
           key:
-            column_net: P5
+            column_net: P8
             stagger: -5
         inner:
           key:
-            column_net: P4
+            column_net: P9
             splay: -4
             stagger: -5
       rows:
@@ -70,15 +73,15 @@ points:
             high:
               skip: true
           key:
-            column_net: P6
+            column_net: P7
             splay: 0
         2:
-          key.column_net: P5
+          key.column_net: P8
           rows:
             high:
               skip: true
         3:
-          key.column_net: P4
+          key.column_net: P9
           rows:
             high:
               skip: true
@@ -93,14 +96,6 @@ points:
           row_net: P18
   rotate: 8
 outlines:
-  raw:
-    - what: rectangle
-      where: true
-      size: [px, py]
-  keys:
-    - what: rectangle
-      where: true
-      size: [kx-0.5,ky-0.5]
   board:
     - what: polygon
       operation: stack
@@ -126,7 +121,7 @@ outlines:
         - ref: main_inner_top
           shift: [1.5px-0.5m,0.5py]
         - ref: main_inner_bot
-          shift: [1.5px-0.5m,-0.5py+m]
+          shift: [1.5px-  0.5m,-0.5py+m]
         - ref: thumb_5_high
           shift: [0.5px,0.5py]
         - ref: thumb_5_low
@@ -139,7 +134,7 @@ outlines:
           shift: [0.5px, -0.5py]
         - ref: main_outer_bot
           shift: [-0.5px,-0.5py]
-      fillet: 2
+      fillet: fillet
   xlBoard:
     - what: polygon
       operation: stack
@@ -178,12 +173,8 @@ outlines:
           shift: [0.5dpx-m, -0.5dpy]
         - ref: main_outer_bot
           shift: [-0.5dpx,-0.5dpy]
-      fillet: 2
-  combo:
-    - name: board
-    - operation: subtract
-      name: keys
-  mountingHoles:
+      fillet: fillet
+  _mountingHoles:
     - what: circle
       radius: screwSize
       where:
@@ -209,7 +200,84 @@ outlines:
       where:
         ref: [thumb_5_high]
         shift: [-0.6kx, -0.3ky]
+  _switch_cutout:
+    - what: rectangle
+      where: true
+      asym: source
+      size: 14
+      bound: false
+  screen_cutout:
+    - what: rectangle
+      where: 
+        ref: main_inner_mid
+        shift: [1kx+2, 5]
+      asym: source
+      size: [14, 36]
+  switch_plate:
+    [ board, -_switch_cutout, -_mountingHoles, -screen_cutout ]
+  _switch_mount_holes_cutout:
+    - what: circle
+      where: true
+      radius: 7
+  mock_pcb:
+    [ board, -_switch_mount_holes_cutout ]
+  _battery_dimension:
+    - what: rectangle
+      where:
+        ref: main_index_bot
+        shift: [0, -15]
+        rotate: -10
+      size: [30, 12]
+  battery_cutout:
+    [ switch_plate, -_battery_dimension ]
 pcbs:
+  top:
+    template: kicad8
+    outlines:
+      main:
+        outline: switch_plate
+  bottom:
+    template: kicad8
+    outlines:
+      main:
+        outline: board
+    footprints:
+      flavorText:
+        what: ceoloide/utility_text
+        params:
+          text: "Louis XVI"
+          reversible: true
+          width: 20
+          height: 25
+          bold: true
+          italic: true
+        where:
+          ref: [main_middle_bot]
+      holeTopLeft:
+        what: ceoloide/mounting_hole_plated
+        where:
+          ref: [main_outer_top]
+          shift: [0.55kx, -0.3ky]
+      holeTopRight:
+        what: ceoloide/mounting_hole_plated
+        where:
+          ref: [main_inner_top]
+          shift: [-0.55kx, -0.3ky]
+      holeBotLeft:
+        what: ceoloide/mounting_hole_plated
+        where:
+          ref: [main_outer_bot]
+          shift: [0.55kx, -0.3ky]
+      holeBotMid:
+        what: ceoloide/mounting_hole_plated
+        where:
+          ref: [thumb_2_low]
+          shift: [0.55kx, -0.3ky]
+      holeBotRight:
+        what: ceoloide/mounting_hole_plated
+        where:
+          ref: [thumb_5_high]
+          shift: [-0.6kx, -0.3ky]
   louisXVI:
     template: kicad8
     outlines:
@@ -253,14 +321,14 @@ pcbs:
           ref: main_inner_mid
           shift: [1kx+2, 5]
       battery:
-        what: ceoloide/battery_connector_jst_ph_2
+        what: ceoloide/battery_connector_molex_pico_ezmate_1x02
         params:
           reversible: true
           BAT_P: BAT_P
           BAT_N: GND
         where:
           ref: main_inner_bot
-          shift: [1kx+3, -1]
+          shift: [1kx+3, -2]
           rotate: -90
       power_switch:
         what: ceoloide/power_switch_smd_side
@@ -268,57 +336,72 @@ pcbs:
           reversible: true
         where:
           ref: thumb_5_high
-          shift: [-10, 9]
+          shift: [-10, 9.5]
           rotate: 88
       reset:
-        what: ceoloide/reset_switch_tht_top
+        what: ceoloide/reset_switch_smd_side
         params:
           reversible: true
           from: GND
           to: RST
         where:
           ref: main_inner_bot
-          shift: [1.5kx, -3]
+          shift: [1.5kx+1, -3]
           rotate: -90
       holeTopLeft:
         what: ceoloide/mounting_hole_npth
+        params:
+          hole_size: moutingHoleSize
+          hole_drill: moutingHoleSize
         where:
           ref: [main_outer_top]
           shift: [0.55kx, -0.3ky]
       holeTopRight:
         what: ceoloide/mounting_hole_npth
+        params:
+          hole_size: moutingHoleSize
+          hole_drill: moutingHoleSize
         where:
           ref: [main_inner_top]
           shift: [-0.55kx, -0.3ky]
       holeBotLeft:
         what: ceoloide/mounting_hole_npth
+        params:
+          hole_size: moutingHoleSize
+          hole_drill: moutingHoleSize
         where:
           ref: [main_outer_bot]
           shift: [0.55kx, -0.3ky]
       holeBotMid:
         what: ceoloide/mounting_hole_npth
+        params:
+          hole_size: moutingHoleSize
+          hole_drill: moutingHoleSize
         where:
           ref: [thumb_2_low]
           shift: [0.55kx, -0.3ky]
       holeBotRight:
         what: ceoloide/mounting_hole_npth
+        params:
+          hole_size: moutingHoleSize
+          hole_drill: moutingHoleSize
         where:
           ref: [thumb_5_high]
           shift: [-0.6kx, -0.3ky]
 cases:
-  bottom:
+  _bottom:
     - name: board
-      extrude: baseWidth
-  xlBottom:
+      extrude: baseThickness
+  _xlBottom:
     - name: xlBoard
-      extrude: baseWidth
+      extrude: baseThickness
   _outerWall:
     - name: xlBoard
       extrude: extrudeSize
   _innerWall:
     - name: board
       extrude: extrudeSize
-  wall:
+  _wall:
     - what: case
       name: _outerWall
       operation: add
@@ -326,15 +409,23 @@ cases:
       name: _innerWall
       operation: subtract
   _holes:
-    - name: mountingHoles
-      extrude: baseWidth
+    - name: _mountingHoles
+      extrude: baseThickness
   case:
     - what: case
-      name: xlBottom
+      name: _xlBottom
       operation: add
     - what: case
       name: _holes
       operation: subtract
     - what: case
-      name: wall
+      name: _wall
       operation: add
+  topPlate:
+    - what: outline
+      name: switch_plate
+      extrude: choc_plate_thickness
+  mockPcb:
+    - what: outline
+      name: mock_pcb
+      extrude: 1.54
