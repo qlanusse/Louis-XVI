@@ -16,8 +16,9 @@ units:
   screwSize: 1
   moutingHoleSize: 4.1
   # Other
-  baseThickness: 4
-  extrudeSize: baseThickness+4
+  pcbThickness: 1.57
+  baseThickness: 1.2
+  caseThickness: 7.4
   choc_plate_thickness: 1.2
   fillet: 2
 points:
@@ -210,9 +211,9 @@ outlines:
     - what: rectangle
       where: 
         ref: main_inner_mid
-        shift: [1kx+2, 5]
+        shift: [1kx+2, 7]
       asym: source
-      size: [14, 36]
+      size: [19, 43]
   switch_plate:
     [ board, -_switch_cutout, -_mountingHoles, -screen_cutout ]
   _switch_mount_holes_cutout:
@@ -389,19 +390,16 @@ pcbs:
           ref: [thumb_5_high]
           shift: [-0.6kx, -0.3ky]
 cases:
-  _bottom:
-    - name: board
-      extrude: baseThickness
   _xlBottom:
     - name: xlBoard
       extrude: baseThickness
   _outerWall:
     - name: xlBoard
-      extrude: extrudeSize
+      extrude: caseThickness
   _innerWall:
     - name: board
-      extrude: extrudeSize
-  _wall:
+      extrude: caseThickness
+  wall:
     - what: case
       name: _outerWall
       operation: add
@@ -411,21 +409,37 @@ cases:
   _holes:
     - name: _mountingHoles
       extrude: baseThickness
-  case:
-    - what: case
-      name: _xlBottom
-      operation: add
+  bottom:
+    - name: board
+      extrude: baseThickness
     - what: case
       name: _holes
       operation: subtract
-    - what: case
-      name: _wall
-      operation: add
   topPlate:
     - what: outline
       name: switch_plate
-      extrude: choc_plate_thickness
+      extrude: baseThickness
+    - what: case
+      name: wall
+      operation: add
+      shift: [0, 0, -caseThickness+baseThickness]
+  _mockHoles:
+    - name: _mountingHoles
+      extrude: pcbThickness
   mockPcb:
     - what: outline
       name: mock_pcb
-      extrude: 1.54
+      extrude: pcbThickness
+    - what: case
+      name: _mockHoles
+      operation: subtract
+  fullBuild:
+    - what: case
+      name: topPlate
+    - what: case
+      name: mockPcb
+      operation: add
+      shift: [0, 0, -4.2]
+    - what: case
+      name: bottom
+      shift: [0, 0, -6.2]
