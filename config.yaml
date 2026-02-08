@@ -423,6 +423,14 @@ cases:
       name: wall
       operation: add
       shift: [0, 0, -caseThickness+baseThickness]
+  mirrorTop:
+    - what: outline
+      name: switch_plate
+      extrude: baseThickness
+    - what: case
+      name: wall
+      operation: add
+      shift: [0, 0, 0]
   _mockHoles:
     - name: _mountingHoles
       extrude: pcbThickness
