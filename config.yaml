@@ -13,7 +13,7 @@ units:
   $default_width: cx
   $default_height: cy
   # M2 screws
-  screwSize: 1
+  screwSize: 2
   moutingHoleSize: 4.1
   # Other
   pcbThickness: 1.57
@@ -184,27 +184,27 @@ outlines:
       radius: screwSize
       where:
         ref: [main_outer_top]
-        shift: [0.55kx, -0.3ky]
+        shift: [0.56kx, -0.56ky]
     - what: circle
       radius: screwSize
       where:
         ref: [main_inner_top]
-        shift: [-0.55kx, -0.3ky]
+        shift: [-0.6kx, -0.5ky]
     - what: circle
       radius: screwSize
       where:
         ref: [main_outer_bot]
-        shift: [0.55kx, -0.3ky]
+        shift: [0.56kx, 0.56ky]
     - what: circle
       radius: screwSize
       where:
-        ref: [thumb_2_low]
-        shift: [0.55kx, -0.3ky]
+        ref: [main_ring_bot]
+        shift: [0.56kx, 0]
     - what: circle
       radius: screwSize
       where:
         ref: [thumb_5_high]
-        shift: [-0.6kx, -0.3ky]
+        shift: [-0.65kx, -0.56ky]
   _switch_cutout:
     - what: rectangle
       where: true
@@ -262,27 +262,27 @@ pcbs:
         what: ceoloide/mounting_hole_plated
         where:
           ref: [main_outer_top]
-          shift: [0.55kx, -0.3ky]
+          shift: [0.56kx, -0.56ky]
       holeTopRight:
         what: ceoloide/mounting_hole_plated
         where:
           ref: [main_inner_top]
-          shift: [-0.55kx, -0.3ky]
+          shift: [-0.6kx, -0.5ky]
       holeBotLeft:
         what: ceoloide/mounting_hole_plated
         where:
           ref: [main_outer_bot]
-          shift: [0.55kx, -0.3ky]
+          shift: [0.56kx, 0.56ky]
       holeBotMid:
         what: ceoloide/mounting_hole_plated
         where:
-          ref: [thumb_2_low]
-          shift: [0.55kx, -0.3ky]
+          ref: [main_ring_bot]
+          shift: [0.56kx, 0]
       holeBotRight:
         what: ceoloide/mounting_hole_plated
         where:
           ref: [thumb_5_high]
-          shift: [-0.6kx, -0.3ky]
+          shift: [-0.65kx, -0.56ky]
   louisXVI:
     template: kicad8
     outlines:
@@ -360,7 +360,7 @@ pcbs:
           hole_drill: moutingHoleSize
         where:
           ref: [main_outer_top]
-          shift: [0.55kx, -0.3ky]
+          shift: [0.56kx, -0.56ky]
       holeTopRight:
         what: ceoloide/mounting_hole_npth
         params:
@@ -368,7 +368,7 @@ pcbs:
           hole_drill: moutingHoleSize
         where:
           ref: [main_inner_top]
-          shift: [-0.55kx, -0.3ky]
+          shift: [-0.6kx, -0.5ky]
       holeBotLeft:
         what: ceoloide/mounting_hole_npth
         params:
@@ -376,15 +376,15 @@ pcbs:
           hole_drill: moutingHoleSize
         where:
           ref: [main_outer_bot]
-          shift: [0.55kx, -0.3ky]
+          shift: [0.56kx, 0.56ky]
       holeBotMid:
         what: ceoloide/mounting_hole_npth
         params:
           hole_size: moutingHoleSize
           hole_drill: moutingHoleSize
         where:
-          ref: [thumb_2_low]
-          shift: [0.55kx, -0.3ky]
+          ref: [main_ring_bot]
+          shift: [0.56kx, 0]
       holeBotRight:
         what: ceoloide/mounting_hole_npth
         params:
@@ -392,7 +392,7 @@ pcbs:
           hole_drill: moutingHoleSize
         where:
           ref: [thumb_5_high]
-          shift: [-0.6kx, -0.3ky]
+          shift: [-0.65kx, -0.56ky]
 cases:
   _xlBottom:
     - name: xlBoard
