@@ -26,9 +26,9 @@ points:
     main:
       #KiCAD placement
       anchor:
-        shift: [100,-100]
+        shift: [100,-150]
       key:
-        padding: 1ky
+        padding: 1ky+2
         spread: 1kx+2
       columns:
         outer:
@@ -62,9 +62,9 @@ points:
           row_net: P21
     thumb:
       key:
-        padding: 1ky
-        spread: kx + 2
-        splay: -10
+        padding: 1ky+2
+        spread: 1kx+2
+        splay: -15
       anchor:
         ref: main_ring_bot
         shift: [0.5kx, -1.5ky]
@@ -87,9 +87,13 @@ points:
             high:
               skip: true
         4:
-          key.column_net: P16
+          key:
+            column_net: P16
+            stagger: -2
         5:
-          key.column_net: P10
+          key:
+            column_net: P10
+            stagger: -2
       rows:
         low:
           row_net: P15
