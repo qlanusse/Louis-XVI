@@ -340,9 +340,9 @@ pcbs:
         params:
           reversible: true
         where:
-          ref: thumb_5_high
-          shift: [-10, 9.5]
-          rotate: 88
+          ref: thumb_4_high
+          shift: [10.5, 13]
+          rotate: 70
       reset:
         what: ceoloide/reset_switch_smd_side
         params:
